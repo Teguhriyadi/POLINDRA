@@ -1,4 +1,4 @@
-<div id="sidebar-nav" class="sidebar">
+<div id="sidebar-nav" class="sidebar" style="margin-top: 30px;">
     <div class="sidebar-scroll">
         @if (Auth::user()->role == "admin")
             @include("layouts.sidebar-admin")    

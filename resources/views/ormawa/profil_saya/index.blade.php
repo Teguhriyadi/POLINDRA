@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="main">
+<div class="main" style="padding-top: 120px;">
     <div class="main-content">
         <div class="container-fluid">
 
