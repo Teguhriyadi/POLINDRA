@@ -135,201 +135,148 @@ class IzinKegiatanController extends Controller
             ]);
             
             return redirect("/ormawa/izin_kegiatan")->with("message", "Data Berhasil di Tambahkan");
+        });
+    }
+    
+    public function edit($id)
+    {
+        return DB::transaction(function() use ($id) {
+            $data["edit"] = IzinKegiatan::where("id", $id)->first();
             
-            // $cek = IzinKegiatan::count();
+            return view("ormawa.izin_kegiatan.edit", $data);
+        });
+    }
+    
+    public function update(Request $request, $id)
+    {
+        $pesan = [
+            'required' => "Kolom :attribute Harus Diisi",
+            "mimetypes" => "Kolom :attribute Harus Berupa PDF",
+            "max" => "Kolom :attribute Maximal Harus :max"
+        ];
+        
+        $this->validate($request, [
+            "nama_kegiatan" => "required",
+            "mulai" => "required",
+            "akhir" => "required",
+            "tempat_pelaksanaan" => "required",
+            "unggah_file" => "mimetypes:application/pdf|max:10000"
+        ], $pesan);
+        
+        return DB::transaction(function() use ($request, $id) {
             
-            // if ($cek == 0) {
-                //     IzinKegiatan::create([
-                    //         "id" => Uuid::uuid4()->getHex(),
-                    //         "user_id" => Auth::user()->id,
-                    //         "nama_kegiatan" => $request["nama_kegiatan"],
-                    //         "tempat_pelaksanaan" => $request["tempat_pelaksanaan"],
-                    //         "mulai" => $request["mulai"],
-                    //         "akhir" => $request["akhir"],
-                    //         "file_laporan" => $data
-                    //     ]);
+            if ($request->file("unggah_file")) {
+                if ($request->file_lama) {
+                    Storage::delete($request->file_lama);
+                }
+                
+                $data = $request->file("unggah_file")->store("file_laporan");
+                
+            } else {
+                $data = $request->file_lama;
+            }
+            
+            IzinKegiatan::where("id", $id)->update([
+                "nama_kegiatan" => $request["nama_kegiatan"],
+                "tempat_pelaksanaan" => $request["tempat_pelaksanaan"],
+                "mulai" => $request["mulai"],
+                "akhir" => $request["akhir"],
+                "file_laporan" => $data
+            ]);
+            
+            return redirect("/ormawa/izin_kegiatan")->with("message", "Data Berhasil di Simpan");
+        });
+    }
+    
+    public function destroy($id)
+    {
+        return DB::transaction(function() use ($id) {
+            $izin_kegiatan = IzinKegiatan::where("id", $id)->first();
+            
+            Storage::delete($izin_kegiatan->file_laporan);
+            
+            $izin_kegiatan->delete();
+            
+            return back()->with("message", "Data Berhasil di Hapus");
+        });
+    }
+    
+    public function show($id)
+    {
+        return DB::transaction(function() use ($id) {
+            $data["detail"] = IzinKegiatan::where("id", $id)->first();
+            
+            return view("ormawa.izin_kegiatan.detail", $data);
+        });
+    }
+    
+    public function ulang($id)
+    {
+        return DB::transaction(function () use ($id) {
+            $data["detail"] = IzinKegiatan::where("id", $id)->first();
+            
+            return view("ormawa.izin_kegiatan.ulang", $data);
+        });
+    }
+    
+    public function ajukan(Request $request, $id)
+    {
+        return DB::transaction(function() use ($request, $id) {
+            
+            $pesan = [
+                'required' => "Kolom :attribute Harus Diisi"
+            ];
+            
+            $this->validate($request, [
+                "nama_kegiatan" => "required",
+                "mulai" => "required",
+                "akhir" => "required",
+                "tempat_pelaksanaan" => "required"
+            ], $pesan);
+            
+            return DB::transaction(function() use ($request, $id) {
+                
+                if ($request->file("unggah_file")) {
+                    if ($request->file_lama) {
+                        Storage::delete($request->file_lama);
+                    }
                     
-                    //     return redirect("/ormawa/izin_kegiatan")->with("message", "Data Berhasil di Tambahkan");
-                    // } else {
-                        //     $mulai = Carbon::parse($request["mulai"]);
-                        //     $selesai = Carbon::parse($request["akhir"]);
-                        //     $tempat = $request["tempat_pelaksanaan"];
-                        
-                        //     $isData = true;
-                        
-                        //     $data_kegiatan = IzinKegiatan::get();
-                        
-                        //     foreach ($data_kegiatan as $item) {
-                            
-                            //         $tanggalMulai = Carbon::parse($item["mulai"]);
-                            //         $tanggalSelesai = Carbon::parse($item["akhir"]);
-                            
-                            //         if (str_contains($tempat, $item["tempat_pelaksanaan"]) && $tanggalMulai->lte($selesai) && $tanggalSelesai->gte($mulai)) {
-                                //             $isData = false;
-                                //             break;
-                                //         }
-                                //     }
-                                
-                                //     if ($isData) {
-                                    //         IzinKegiatan::create([
-                                        //             "id" => Uuid::uuid4()->getHex(),
-                                        //             "user_id" => Auth::user()->id,
-                                        //             "nama_kegiatan" => $request["nama_kegiatan"],
-                                        //             "file_laporan" => $data,
-                                        //             "tempat_pelaksanaan" => $request["tempat_pelaksanaan"],
-                                        //             "mulai" => $request["mulai"],
-                                        //             "akhir" => $request["akhir"],
-                                        //             "status" => "0",
-                                        //         ]);
-                                        
-                                        //         return redirect("/ormawa/izin_kegiatan")->with("message", "Data Berhasil di Tambahkan");
-                                        //     } else {
-                                            //         return back()->withInput()->with("message_error", "Tanggal dan Tempat Sudah Ada Yang Mengajukan Terlebih Dahulu");
-                                            //     }
-                                            // }
-                                        });
-                                    }
-                                    
-                                    public function edit($id)
-                                    {
-                                        return DB::transaction(function() use ($id) {
-                                            $data["edit"] = IzinKegiatan::where("id", $id)->first();
-                                            
-                                            return view("ormawa.izin_kegiatan.edit", $data);
-                                        });
-                                    }
-                                    
-                                    public function update(Request $request, $id)
-                                    {
-                                        $pesan = [
-                                            'required' => "Kolom :attribute Harus Diisi",
-                                            "mimetypes" => "Kolom :attribute Harus Berupa PDF",
-                                            "max" => "Kolom :attribute Maximal Harus :max"
-                                        ];
-                                        
-                                        $this->validate($request, [
-                                            "nama_kegiatan" => "required",
-                                            "mulai" => "required",
-                                            "akhir" => "required",
-                                            "tempat_pelaksanaan" => "required",
-                                            "unggah_file" => "mimetypes:application/pdf|max:10000"
-                                        ], $pesan);
-                                        
-                                        return DB::transaction(function() use ($request, $id) {
-                                            
-                                            if ($request->file("unggah_file")) {
-                                                if ($request->file_lama) {
-                                                    Storage::delete($request->file_lama);
-                                                }
-                                                
-                                                $data = $request->file("unggah_file")->store("file_laporan");
-                                                
-                                            } else {
-                                                $data = $request->file_lama;
-                                            }
-                                            
-                                            IzinKegiatan::where("id", $id)->update([
-                                                "nama_kegiatan" => $request["nama_kegiatan"],
-                                                "tempat_pelaksanaan" => $request["tempat_pelaksanaan"],
-                                                "mulai" => $request["mulai"],
-                                                "akhir" => $request["akhir"],
-                                                "file_laporan" => $data
-                                            ]);
-                                            
-                                            return redirect("/ormawa/izin_kegiatan")->with("message", "Data Berhasil di Simpan");
-                                        });
-                                    }
-                                    
-                                    public function destroy($id)
-                                    {
-                                        return DB::transaction(function() use ($id) {
-                                            $izin_kegiatan = IzinKegiatan::where("id", $id)->first();
-                                            
-                                            Storage::delete($izin_kegiatan->file_laporan);
-                                            
-                                            $izin_kegiatan->delete();
-                                            
-                                            return back()->with("message", "Data Berhasil di Hapus");
-                                        });
-                                    }
-                                    
-                                    public function show($id)
-                                    {
-                                        return DB::transaction(function() use ($id) {
-                                            $data["detail"] = IzinKegiatan::where("id", $id)->first();
-                                            
-                                            return view("ormawa.izin_kegiatan.detail", $data);
-                                        });
-                                    }
-                                    
-                                    public function ulang($id)
-                                    {
-                                        return DB::transaction(function () use ($id) {
-                                            $data["detail"] = IzinKegiatan::where("id", $id)->first();
-                                            
-                                            return view("ormawa.izin_kegiatan.ulang", $data);
-                                        });
-                                    }
-                                    
-                                    public function ajukan(Request $request, $id)
-                                    {
-                                        return DB::transaction(function() use ($request, $id) {
-                                            
-                                            $pesan = [
-                                                'required' => "Kolom :attribute Harus Diisi"
-                                            ];
-                                            
-                                            $this->validate($request, [
-                                                "nama_kegiatan" => "required",
-                                                "mulai" => "required",
-                                                "akhir" => "required",
-                                                "tempat_pelaksanaan" => "required"
-                                            ], $pesan);
-                                            
-                                            return DB::transaction(function() use ($request, $id) {
-                                                
-                                                if ($request->file("unggah_file")) {
-                                                    if ($request->file_lama) {
-                                                        Storage::delete($request->file_lama);
-                                                    }
-                                                    
-                                                    $data = $request->file("unggah_file")->store("file_laporan");
-                                                    
-                                                } else {
-                                                    $data = $request->file_lama;
-                                                }
-                                                
-                                                IzinKegiatan::where("id", $id)->update([
-                                                    "nama_kegiatan" => $request["nama_kegiatan"],
-                                                    "tempat_pelaksanaan" => $request["tempat_pelaksanaan"],
-                                                    "mulai" => $request["mulai"],
-                                                    "akhir" => $request["akhir"],
-                                                    "file_laporan" => $data,
-                                                    "status" => "3"
-                                                ]);
-                                                
-                                                return redirect("/ormawa/izin_kegiatan")->with("message", "Data Berhasil di Simpan");
-                                            });
-                                            
-                                        });
-                                    }
-                                    
-                                    public function laporan($id)
-                                    {
-                                        return DB::transaction(function() use ($id) {
-                                            $data = IzinKegiatan::where("id", $id)->first();
-                                            
-                                            return response()->download("storage/".$data["file_laporan"]);
-                                        });
-                                    }
-                                    
-                                    public function balasan($id)
-                                    {
-                                        return DB::transaction(function() use ($id) {
-                                            $data = IzinKegiatan::where("id", $id)->first();
-                                            
-                                            return response()->download("storage/".$data["file_surat_balasan"]);
-                                        });
-                                    }
-                                }
-                                
+                    $data = $request->file("unggah_file")->store("file_laporan");
+                    
+                } else {
+                    $data = $request->file_lama;
+                }
+                
+                IzinKegiatan::where("id", $id)->update([
+                    "nama_kegiatan" => $request["nama_kegiatan"],
+                    "tempat_pelaksanaan" => $request["tempat_pelaksanaan"],
+                    "mulai" => $request["mulai"],
+                    "akhir" => $request["akhir"],
+                    "file_laporan" => $data,
+                    "status" => "3"
+                ]);
+                
+                return redirect("/ormawa/izin_kegiatan")->with("message", "Data Berhasil di Simpan");
+            });
+            
+        });
+    }
+    
+    public function laporan($id)
+    {
+        return DB::transaction(function() use ($id) {
+            $data = IzinKegiatan::where("id", $id)->first();
+            
+            return response()->download("storage/".$data["file_laporan"]);
+        });
+    }
+    
+    public function balasan($id)
+    {
+        return DB::transaction(function() use ($id) {
+            $data = IzinKegiatan::where("id", $id)->first();
+            
+            return response()->download("storage/".$data["file_surat_balasan"]);
+        });
+    }
+}
