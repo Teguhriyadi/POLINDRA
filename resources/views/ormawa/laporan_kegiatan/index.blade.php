@@ -72,6 +72,10 @@
                                         <button  class="btn btn-success btn-sm">
                                             <i class="fa fa-check"></i> Kegiatan Selesai
                                         </button>
+                                        @else
+                                        <button class="btn btn-danger btn-sm">
+                                            Kegiatan Berlangsung
+                                        </button>
                                         @endif
                                     </td>
                                     <td class="text-center">
@@ -81,7 +85,7 @@
                                         </a>
                                         @endif
                                         <a href="{{ url('/ormawa/laporan_kegiatan/show/'.$item["id"]) }}" class="btn btn-info btn-sm">
-                                            <i class="fa fa-search"></i> SELENGKAPNYA
+                                            <i class="fa fa-search"></i> Detail
                                         </a>
                                     </td>
                                 </tr>

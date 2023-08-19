@@ -16,7 +16,10 @@ class LaporanKegiatanController extends Controller
     public function index()
     {
         return DB::transaction(function () {
-            $data["laporan"] = IzinKegiatan::where("user_id", Auth::user()->id)->orderBy("created_at", "ASC")->get();
+            $data["laporan"] = IzinKegiatan::where("user_id", Auth::user()->id)
+                ->where("file_surat_balasan", "!=", null)
+                ->orderBy("created_at", "ASC")
+                ->get();
 
             return view("ormawa.laporan_kegiatan.index", $data);
         });
@@ -37,12 +40,13 @@ class LaporanKegiatanController extends Controller
             "required" => "Kolom :attribute Harus Diisi",
             "image" => "Kolom :attribute Harus Berupa Gambar",
             "mimes" => "Kolom :attribute Harus PNG, JPG, JPEG",
-            "mimestypes" => "Kolom :attribute Harus PDF"
+            "mimestypes" => "Kolom :attribute Harus PDF",
+            "max" => "Kolom :attribute Tidak Boleh Lebih Dari :max"
         ];
 
         $this->validate($request, [
             "file_lpj" => "required|mimetypes:application/pdf|max:10000",
-            "foto_dokumentasi" => "required|image|mimes:png,jpg,jpeg"
+            "foto_dokumentasi" => "required|image|mimes:png,jpg,jpeg|max:204"
         ], $messages);
 
         return DB::transaction(function() use ($request, $id) {
@@ -51,7 +55,7 @@ class LaporanKegiatanController extends Controller
             $dokumentasi = $request->file("foto_dokumentasi")->store("dokumentasi");
 
             LaporanKegiatan::create([
-                "id" => 1,
+                "id" => Uuid::uuid4()->getHex(),
                 "user_id" => Auth::user()->id,
                 "izin_kegiatan_id" => $id,
                 "file_lpj" => $lpj,
@@ -119,6 +123,15 @@ class LaporanKegiatanController extends Controller
             $laporan_kegiatan = LaporanKegiatan::where("id", $id)->first();
 
             return response()->download("storage/".$laporan_kegiatan->file_lpj);
+        });
+    }
+
+    public function balasan($id)
+    {
+        return DB::transaction(function() use ($id) {
+            $kegiatan = IzinKegiatan::where("id", $id)->first();
+
+            return response()->download("storage/".$kegiatan["file_surat_balasan"]);
         });
     }
 }

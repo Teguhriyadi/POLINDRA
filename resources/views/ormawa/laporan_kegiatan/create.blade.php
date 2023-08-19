@@ -61,6 +61,18 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-md-3"> Tanggal Pengajuan Kegiatan </label>
+                                <div class="col-md-7">
+                                    @php
+                                        $akhir = Carbon::createFromFormat('Y-m-d H:i:s', $detail->created_at);
+                                    $format = $akhir->isoFormat('dddd, D MMMM YYYY HH:mm:ss');
+                                    echo $format;
+                                    @endphp
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group @error("file_lpj") {{ 'has-error' }} @enderror ">
                             <div class="row">
                                 <label for="file_lpj" class="control-label col-md-3"> File LPJ </label>

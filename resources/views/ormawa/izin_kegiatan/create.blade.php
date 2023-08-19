@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="main">
+<div class="main" style="padding-top: 120px;">
     <div class="main-content">
         <div class="container-fluid">
 
@@ -13,6 +13,13 @@
             </a>
 
             <br><br>
+
+            @if (session("message_error"))
+            <div class="alert alert-danger">
+                <strong>Maaf, </strong>
+                {!! session("message_error") !!}
+            </div>
+            @endif
 
             <div class="panel panel-headline">
                 <div class="panel-heading">

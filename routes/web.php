@@ -134,6 +134,7 @@ Route::group(["middleware" => ["is_autentikasi"]], function() {
             Route::get("/laporan/{id}", [LaporanKegiatanController::class, "laporan"]);
             Route::get("/lpj/{id}", [LaporanKegiatanController::class, "lpj"]);
             Route::post("/simpan/{id}", [LaporanKegiatanController::class, "store"]);
+            Route::get("/balasan/{id}", [LaporanKegiatanController::class, "balasan"]);
         });
 
         Route::prefix("profil_saya")->group(function() {

@@ -29,6 +29,16 @@ class IzinKegiatanController extends Controller
     
     public function update(Request $request, $id)
     {
+        $messages = [
+            "required" => "Kolom :attribute Harus Diisi",
+            "mimetypes" => "Kolom :attribute Harus PDF",
+            "max" => "Kolom :attribute Maximal Harus :max"
+        ];
+
+        $this->validate($request, [
+            "file_surat_balasan" => "required|mimetypes:application/pdf|max:10000"
+        ], $messages);
+
         return DB::transaction(function() use ($request, $id) {
             if ($request->file("file_surat_balasan")) {
                 $data = $request->file("file_surat_balasan")->store("file_surat_balasan");

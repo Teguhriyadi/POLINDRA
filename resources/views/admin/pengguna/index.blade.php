@@ -35,6 +35,7 @@
                                 <th>Email</th>
                                 <th style="text-align: center;">Status</th>
                                 <th style="text-align: center;">Role</th>
+                                <th>Deskripsi</th>
                                 <th style="text-align: center;">Aksi</th>
                             </tr>
                         </thead>
@@ -68,6 +69,13 @@
                                         @endif
                                     </td>
                                     <td class="text-center">{{ $item["role"] }}</td>
+                                    <td>
+                                        @if (empty($item["deskripsi"]))
+                                            -
+                                        @else
+                                        {{ $item["deskripsi"] }}
+                                        @endif
+                                    </td>
                                     <td class="text-center">
                                         @if ($item["id"] == Auth::user()->id)
                                             -    

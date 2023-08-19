@@ -1,5 +1,5 @@
 @php
-    use Carbon\Carbon;
+use Carbon\Carbon;
 @endphp
 
 @extends("layouts.main")
@@ -11,13 +11,13 @@
 <div class="main" style="padding-top: 120px;">
     <div class="main-content">
         <div class="container-fluid">
-
+            
             <a href="{{ url('/ormawa/laporan_kegiatan') }}" class="btn btn-danger btn-sm">
                 <i class="fa fa-sign-out"></i> KEMBALI 
             </a>
-
+            
             <br><br>
-
+            
             <div class="panel panel-headline">
                 <div class="panel-heading">
                     <h3 class="panel-title">
@@ -72,53 +72,28 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group @error("file_lpj") {{ 'has-error' }} @enderror">
+                        <div class="form-group">
                             <div class="row">
-                                <label for="file_lpj" class="control-label col-md-3"> Unggah File LPJ </label>
+                                <label class="control-label col-md-3"> Tanggal Pengajuan Kegiatan </label>
                                 <div class="col-md-7">
-                                    @if (!empty($detail->laporan_kegiatan))
-                                    <a target="_blank" href="{{ url('/ormawa/laporan_kegiatan/lpj/'.$detail["laporan_kegiatan"]["id"]) }}" class="btn btn-primary btn-sm">
-                                        <i class="fa fa-download"></i> UNDUH FILE
+                                    @php
+                                    $akhir = Carbon::createFromFormat('Y-m-d H:i:s', $detail->created_at);
+                                    $format = $akhir->isoFormat('dddd, D MMMM YYYY HH:mm:ss');
+                                    echo $format;
+                                    @endphp
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-md-3"> File Surat Balasan </label>
+                                <div class="col-md-7">
+                                    <a target="_blank" href="{{ url('/ormawa/laporan_kegiatan/balasan/'.$detail["id"]) }}" class="btn btn-primary btn-sm">
+                                        <i class="fa fa-download"></i> Unduh File
                                     </a>
-                                    @else
-                                    <input type="file" class="form-control" name="file_lpj" id="file_lpj">
-                                    @error("file_lpj")
-                                        <span class="text-danger">
-                                            {{ $message }}
-                                        </span>
-                                    @enderror
-                                    @endif
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group @error("foto_dokumentasi") {{ 'has-error' }} @enderror">
-                            <div class="row">
-                                <label for="foto_dokumentasi" class="control-label col-md-3"> Foto Dokumentasi </label>
-                                <div class="col-md-7">
-                                    @if (!empty($detail->laporan_kegiatan))
-                                    <img src="{{ url('/storage/'.$detail->laporan_kegiatan->foto_dokumentasi) }}" style="width: 150px; height: 150px;">
-                                    @else
-                                    <input type="file" class="form-control" name="foto_dokumentasi" id="foto_dokumentasi">
-                                    @error("foto_dokumentasi")
-                                        <span class="text-danger">
-                                            {{ $message }}
-                                        </span>
-                                    @enderror
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                        @if (!empty($detail->laporan_kegiatan))
-                        
-                        @else
-                        <hr>
-                        <button type="reset" class="btn btn-danger btn-sm">
-                            BATAL
-                        </button>
-                        <button type="submit" class="btn btn-primary btn-sm">
-                            SIMPAN
-                        </button>
-                        @endif
                     </div>
                 </form>
             </div>

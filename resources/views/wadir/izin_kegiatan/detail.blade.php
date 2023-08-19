@@ -42,7 +42,7 @@ use Carbon\Carbon;
                             <div class="row">
                                 <label for="file_surat_izin" class="control-label col-md-3"> File Surat Izin </label>
                                 <div class="col-md-7">
-                                    <a target="_blank" href="" class="btn btn-primary btn-sm">
+                                    <a target="_blank" href="{{ url('/wadir/izin_kegiatan/download/'.$detail["id"]) }}" class="btn btn-primary btn-sm">
                                         <i class="fa fa-download"></i> UNDUH FILE
                                     </a>
                                 </div>
@@ -76,6 +76,18 @@ use Carbon\Carbon;
                                 <div class="col-md-7">
                                     {{ $detail['tempat_pelaksanaan'] }}
                                 </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="control-label col-md-3"> Tanggal Pengajuan Kegiatan </label>
+                            <div class="col-md-7">
+                                @php
+                                    $mulai = Carbon::createFromFormat('Y-m-d H:i:s', $detail->created_at);
+                                    $format = $mulai->isoFormat('dddd, D MMMM YYYY HH:mm:ss');
+                                    echo $format;
+                                @endphp
+                            </div>
                             </div>
                         </div>
                         @if ($detail->status == 3)

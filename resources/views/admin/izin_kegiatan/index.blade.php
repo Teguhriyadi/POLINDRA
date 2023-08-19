@@ -30,14 +30,14 @@
                     <table class="table table-bordered" id="example">
                         <thead>
                             <tr>
-                                <th class="text-center">No.</th>
+                                <th style="text-align: center;">No.</th>
                                 <th>Nama UKM</th>
                                 <th>Nama Kegiatan</th>
-                                <th class="text-center">File Surat</th>
-                                <th class="text-center">File Surat Balasan</th>
+                                <th style="text-align: center;">File Surat</th>
+                                <th style="text-align: center;">File Surat Balasan</th>
                                 <th>Tempat</th>
-                                <th class="text-center">Status</th>
-                                <th class="text-center">Aksi</th>
+                                <th style="text-align: center;">Status</th>
+                                <th style="text-align: center;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>

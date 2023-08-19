@@ -76,6 +76,18 @@
                         </div>
                         <div class="form-group">
                             <div class="row">
+                                <label class="control-label col-md-3"> Tanggal Pengajuan Kegiatan </label>
+                                <div class="col-md-7">
+                                    @php
+                                    $akhir = Carbon::createFromFormat('Y-m-d H:i:s', $detail->created_at);
+                                    $format = $akhir->isoFormat('dddd, D MMMM YYYY HH:mm:ss');
+                                    echo $format;
+                                    @endphp
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
                                 <label for="status" class="control-label col-md-3"> Status </label>
                                 <div class="col-md-7">
                                     @if ($detail["status"] == "1")
@@ -88,7 +100,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group @error("file_surat_balasan") {{ 'has-error' }} @enderror">
                             <div class="row">
                                 <label for="file_surat_balasan" class="control-label col-md-3"> Unggah Surat Balasan </label>
                                 <div class="col-md-7">
@@ -98,6 +110,11 @@
                                     </a>
                                     @else
                                     <input type="file" class="form-control" name="file_surat_balasan" id="file_surat_balasan">
+                                    @error("file_surat_balasan")
+                                        <span class="text-danger">
+                                            {{ $message }}
+                                        </span>
+                                    @enderror
                                     @endif
                                 </div>
                             </div>

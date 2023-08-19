@@ -8,7 +8,7 @@
 
 @section('content')
 
-<div class="main">
+<div class="main" style="padding-top: 120px;">
     <div class="main-content">
         <div class="container-fluid">
 
@@ -56,6 +56,18 @@
                             <label for="tempat_pelaksanaan" class="control-label col-md-3"> Tempat Pelaksanaan </label>
                             <div class="col-md-7">
                                 {{ $detail["tempat_pelaksanaan"] }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label class="control-label col-md-3"> Tanggal Pengajuan Kegiatan </label>
+                            <div class="col-md-7">
+                                @php
+                                    $akhir = Carbon::createFromFormat('Y-m-d H:i:s', $detail->created_at);
+                                    $format = $akhir->isoFormat('dddd, D MMMM YYYY HH:mm:ss');
+                                    echo $format;
+                                @endphp
                             </div>
                         </div>
                     </div>
