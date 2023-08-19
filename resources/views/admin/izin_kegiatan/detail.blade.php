@@ -11,6 +11,11 @@
 <div class="main" style="padding-top: 120px;">
     <div class="main-content">
         <div class="container-fluid">
+
+            <a href="{{ url('/super_admin/izin_kegiatan') }}" class="btn btn-danger btn-sm">
+                <i class="fa fa-sign-out"></i> KEMBALI 
+            </a>
+            <br><br>
             
             <div class="panel panel-headline">
                 <div class="panel-heading">

@@ -13,7 +13,7 @@ class IzinKegiatanController extends Controller
     public function index()
     {
         return DB::transaction(function() {
-            $data["izin_kegiatan"] = IzinKegiatan::orderBy("created_at", "ASC")->get();
+            $data["izin_kegiatan"] = IzinKegiatan::orderBy("status", "ASC")->orderBy("created_at", "ASC")->get();
 
             return view("wadir.izin_kegiatan.index", $data);
         });
@@ -46,6 +46,27 @@ class IzinKegiatanController extends Controller
                 $komentar = null;
             }
 
+            $count = false;
+            $ormawa = null;
+
+            $data_kegiatan = IzinKegiatan::where("id", $id)->first();
+
+            if ($request->status == 1) {
+                $izin = IzinKegiatan::where("status", 1)->get();
+
+                foreach ($izin as $i) {
+                    if ($i->tempat_pelaksanaan == $data_kegiatan->tempat_pelaksanaan) {
+                        $count = true;
+                        $ormawa = $i->users->nama;
+                        break;
+                    }
+                }
+            }
+
+            if ($count) {
+                return back()->withInput()->with("message_error", "Tanggal / Waktu dan Tempat Sudah Disii Oleh Ormawa <strong>".$ormawa."</strong> ");
+            }
+            
             IzinKegiatan::where("id", $id)->update([
                 "status" => $request["status"],
                 "user_validasi_id" => Auth::user()->id,

@@ -52,7 +52,7 @@
                             {{ session("tahun") }}
                         </strong>
                             @if (!session("izin_kegiatan")->count() == 0)
-                            <a href="{{ url('/ormawa/izin_kegiatan/'. session("bulan") . '/' . session("tahun")) }}" class="btn btn-primary btn-sm pull-right">
+                            <a target="_blank" href="{{ url('/ormawa/izin_kegiatan/'. session("bulan") . '/' . session("tahun")) }}" class="btn btn-primary btn-sm pull-right">
                                 <i class="fa fa-download"></i> Download Data
                             </a>
                             @endif

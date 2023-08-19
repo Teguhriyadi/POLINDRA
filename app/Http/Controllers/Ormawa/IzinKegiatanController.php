@@ -130,7 +130,7 @@ class IzinKegiatanController extends Controller
             
             $overlapping = IzinKegiatan::where(function ($query) use ($tempat, $mulai, $selesai) {
                 $query->where(function ($query) use ($tempat) {
-                    $query->where('tempat_pelaksanaan', 'LIKE', $tempat . ' %')
+                    $query->where("status", 0)->where('tempat_pelaksanaan', 'LIKE', $tempat . ' %')
                     ->orWhere('tempat_pelaksanaan', 'LIKE', '% ' . $tempat);
                 })
                 ->where(function ($query) use ($mulai, $selesai) {

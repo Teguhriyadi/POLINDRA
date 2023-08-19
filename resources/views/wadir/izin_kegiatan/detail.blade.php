@@ -12,6 +12,18 @@ use Carbon\Carbon;
     <div class="main-content">
         <div class="container-fluid">
             
+            <a href="{{ url('/wadir/izin_kegiatan') }}" class="btn btn-danger btn-sm">
+                <i class="fa fa-sign-out"></i> KEMBALI 
+            </a>
+            <br><br>
+            
+            @if (session("message_error"))
+            <div class="alert alert-danger">
+                <strong>Gagal,</strong>
+                {!! session("message_error") !!}
+            </div>
+            @endif
+            
             <div class="panel panel-headline">
                 <div class="panel-heading">
                     <h3 class="panel-title">
@@ -81,13 +93,13 @@ use Carbon\Carbon;
                         <div class="form-group">
                             <div class="row">
                                 <label class="control-label col-md-3"> Tanggal Pengajuan Kegiatan </label>
-                            <div class="col-md-7">
-                                @php
+                                <div class="col-md-7">
+                                    @php
                                     $mulai = Carbon::createFromFormat('Y-m-d H:i:s', $detail->created_at);
                                     $format = $mulai->isoFormat('dddd, D MMMM YYYY HH:mm:ss');
                                     echo $format;
-                                @endphp
-                            </div>
+                                    @endphp
+                                </div>
                             </div>
                         </div>
                         @if ($detail->status == 3)
@@ -120,8 +132,8 @@ use Carbon\Carbon;
                                     @elseif($detail->status == 3)
                                     <select name="status" class="form-control" id="status">
                                         <option value="">- Pilih -</option>
-                                        <option value="1">Disetujui</option>
-                                        <option value="2">Ditolak</option>
+                                        <option value="1" {{ old('status') == 1 ? 'selected' : '' }}>Disetujui</option>
+                                        <option value="2" {{ old('status') == 2 ? 'selected' : '' }} >Ditolak</option>
                                     </select>
                                     @error('status')
                                     <span class="text-danger">
@@ -132,8 +144,8 @@ use Carbon\Carbon;
                                     @else
                                     <select name="status" class="form-control" id="status">
                                         <option value="">- Pilih -</option>
-                                        <option value="1">Disetujui</option>
-                                        <option value="2">Ditolak</option>
+                                        <option value="1" {{ old('status') == 1 ? 'selected' : '' }} >Disetujui</option>
+                                        <option value="2" {{ old('status') == 2 ? 'selected' : '' }} >Ditolak</option>
                                     </select>
                                     @error('status')
                                     <span class="text-danger">
@@ -145,18 +157,18 @@ use Carbon\Carbon;
                             </div>
                         </div>
                         @if ($detail->status == 2)
-                            <div class="form-group">
-                                <div class="row">
-                                    <label class="control-label col-md-3"> Komentar </label>
-                                    <div class="col-md-7">
-                                        <strong>
-                                            <span class="text-danger">
-                                                {{ $detail->komentar }}
-                                            </span>
-                                        </strong>
-                                    </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="control-label col-md-3"> Komentar </label>
+                                <div class="col-md-7">
+                                    <strong>
+                                        <span class="text-danger">
+                                            {{ $detail->komentar }}
+                                        </span>
+                                    </strong>
                                 </div>
                             </div>
+                        </div>
                         @endif
                         <div class="form-group" id="view_komentar" style="display: none">
                             <div class="row">
