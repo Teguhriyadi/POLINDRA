@@ -30,27 +30,42 @@
                     @csrf
                     @method("PUT")
                     <div class="panel-body">
-                        <div class="form-group">
+                        <div class="form-group @error("password_lama") {{ 'has-error' }} @enderror">
                             <div class="row">
                                 <label for="password_lama" class="control-label col-md-3"> Password Lama </label>
                                 <div class="col-md-7">
                                     <input type="password" class="form-control" name="password_lama" id="password_lama" placeholder="Masukkan Password Lama">
+                                    @error("password_lama")
+                                        <span class="text-danger">
+                                            {{ $message }}
+                                        </span>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group @error("password_baru") {{ 'has-error' }} @enderror">
                             <div class="row">
                                 <label for="password_baru" class="control-label col-md-3"> Password Baru </label>
                                 <div class="col-md-7">
                                     <input type="password" class="form-control" name="password_baru" id="password_baru" placeholder="Masukkan Password Baru">
+                                    @error("password_baru")
+                                        <span class="text-danger">
+                                            {{ $message }}
+                                        </span>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group @error("konfirmasi_password") {{ 'has-error' }} @enderror">
                             <div class="row">
                                 <label for="konfirmasi_password" class="control-label col-md-3"> Konfirmasi Password </label>
                                 <div class="col-md-7">
                                     <input type="password" class="form-control" name="konfirmasi_password" id="konfirmasi_password" placeholder="Masukkan Konfirmasi Password">
+                                    @error("konfirmasi_password")
+                                        <span class="text-danger">
+                                            {{ $message }}
+                                        </span>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
