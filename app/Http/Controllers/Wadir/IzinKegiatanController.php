@@ -52,13 +52,15 @@ class IzinKegiatanController extends Controller
             $data_kegiatan = IzinKegiatan::where("id", $id)->first();
 
             if ($request->status == 1) {
-                $izin = IzinKegiatan::where("status", 1)->get();
+                $izin = IzinKegiatan::where("status", "1")->get();
 
                 foreach ($izin as $i) {
-                    if ($i->tempat_pelaksanaan == $data_kegiatan->tempat_pelaksanaan) {
-                        $count = true;
-                        $ormawa = $i->users->nama;
-                        break;
+                    if (!$i->laporan_kegiatan) {
+                        if ($i->tempat_pelaksanaan == $data_kegiatan->tempat_pelaksanaan) {
+                            $count = true;
+                            $ormawa = $i->users->nama;
+                            break;
+                        }
                     }
                 }
             }
