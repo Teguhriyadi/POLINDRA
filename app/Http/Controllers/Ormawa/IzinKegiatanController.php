@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
+use PDF;
 
 class IzinKegiatanController extends Controller
 {
@@ -21,7 +22,42 @@ class IzinKegiatanController extends Controller
             ->orderBy("created_at", "DESC")
             ->get();
             
+            $tahunSekarang = date('Y');
+            $tahunAwal = IzinKegiatan::orderBy('created_at', 'asc')->value('created_at');
+            $tahunAwal = Carbon::parse($tahunAwal)->year;
+            $data["tahun_range"] = range($tahunAwal, $tahunSekarang);
+            
             return view("ormawa.izin_kegiatan.index", $data);
+        });
+    }
+    
+    public function post(Request $request)
+    {
+        $messages = [
+            "required" => "Kolom :attribute Harus Diisi"
+        ];
+        
+        $this->validate($request, [
+            "bulan" => "required",
+            "tahun" => "required"
+        ], $messages);
+        
+        return DB::transaction(function() use ($request) {
+            $bulan = $request->bulan;
+            $tahun = $request->tahun;
+
+            $izin_kegiatan = IzinKegiatan::whereMonth("created_at", $request->bulan)
+            ->whereYear("created_at", $request->tahun)
+            ->where("user_id", Auth::user()->id)
+            ->orderBy("created_at", "ASC")
+            ->get();
+            
+            $tahunSekarang = date('Y');
+            $tahunAwal = IzinKegiatan::orderBy('created_at', 'asc')->value('created_at');
+            $tahunAwal = Carbon::parse($tahunAwal)->year;
+            $tahun_range = range($tahunAwal, $tahunSekarang);
+            
+            return back()->with(["izin_kegiatan" => $izin_kegiatan, "tahun_range" => $tahun_range, "tahun" => $tahun, "bulan" => $bulan]);
         });
     }
     
@@ -45,8 +81,6 @@ class IzinKegiatanController extends Controller
                 }
             }
             
-            // Langsung Kesini Ketika Break;
-            
             if (!$isData) {
                 return back()->with("message_error", "Anda Sudah Memiliki Kegiatan");
             } else {
@@ -54,27 +88,6 @@ class IzinKegiatanController extends Controller
             }
         }
         
-    }
-    
-    private function checkOverlapping($tempatAwal, $tempatAkhir, $mulai, $selesai)
-    {
-        $overlapping = IzinKegiatan::where(function ($query) use ($tempatAwal, $tempatAkhir, $mulai, $selesai) {
-            $query->where(function ($query) use ($tempatAwal, $tempatAkhir) {
-                $query->where('tempat_pelaksanaan', 'LIKE', "$tempatAwal%")
-                ->orWhere('tempat_pelaksanaan', 'LIKE', "%$tempatAkhir");
-            })
-            ->where(function ($query) use ($mulai, $selesai) {
-                $query->whereBetween("mulai", [$mulai, $selesai])
-                ->orWhereBetween("akhir", [$mulai, $selesai])
-                ->orWhere(function ($query) use ($mulai, $selesai) {
-                    $query->where("mulai", "<=", $mulai)
-                    ->where("akhir", ">=", $selesai);
-                });
-            });
-        })
-        ->count();
-        
-        return $overlapping > 0;
     }
     
     public function store(Request $request)
@@ -277,6 +290,24 @@ class IzinKegiatanController extends Controller
             $data = IzinKegiatan::where("id", $id)->first();
             
             return response()->download("storage/".$data["file_surat_balasan"]);
+        });
+    }
+
+    public function filter($bulan, $tahun)
+    {
+        return DB::transaction(function() use ($bulan, $tahun) {
+            $izin_kegiatan = IzinKegiatan::whereMonth("created_at", $bulan)
+                ->whereYear("created_at", $tahun)
+                ->where("user_id", Auth::user()->id)
+                ->orderBy("created_at", "ASC")
+                ->get(); 
+
+            $c_bulan = Carbon::createFromDate(null, $bulan, null)->translatedFormat('F');
+            $c_tahun = $tahun;
+
+            $pdf = PDF::loadView("ormawa.izin_kegiatan.filter", ["izin_kegiatan" => $izin_kegiatan, "bulan" => $c_bulan, "tahun" => $c_tahun])->setPaper("a3");
+
+            return $pdf->download("Data_Izin_Kegiatan_Bulan_" . $c_bulan . "_Tahun_" . $c_tahun . ".pdf");
         });
     }
 }

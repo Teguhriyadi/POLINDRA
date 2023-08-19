@@ -114,6 +114,7 @@ Route::group(["middleware" => ["is_autentikasi"]], function() {
 
         Route::prefix("izin_kegiatan")->group(function() {
             Route::get("/", [IzinKegiatanController::class, "index"]);
+            Route::post("/", [IzinKegiatanController::class, "post"]);
             Route::get("/create", [IzinKegiatanController::class, "create"]);
             Route::post("/store", [IzinKegiatanController::class, "store"]);
             Route::get("/edit/{id}", [IzinKegiatanController::class, "edit"]);
@@ -124,6 +125,7 @@ Route::group(["middleware" => ["is_autentikasi"]], function() {
             Route::delete("/destroy/{id}", [IzinKegiatanController::class, "destroy"]);
             Route::get("/download/{id}", [IzinKegiatanController::class, "laporan"]);
             Route::get("/balasan/{id}", [IzinKegiatanController::class, "balasan"]);
+            Route::get("/{bulan}/{tahun}", [IzinKegiatanController::class, "filter"]);
         });
 
         Route::prefix("laporan_kegiatan")->group(function() {
