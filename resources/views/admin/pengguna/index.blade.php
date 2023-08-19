@@ -14,6 +14,13 @@
     <div class="main-content">
         <div class="container-fluid">
 
+            @if (session("message"))
+            <div class="alert alert-success">
+                <strong>Berhasil, </strong>
+                {!! session("message") !!}
+            </div>
+            @endif
+
             <a href="{{ url('/super_admin/pengguna/create') }}" class="btn btn-primary btn-sm">
                 <i class="fa fa-plus"></i> TAMBAH
             </a>

@@ -27,18 +27,44 @@ class PenggunaController extends Controller
 
     public function store(Request $request)
     {
+        $messages = [
+            "required" => "Kolom :attribute Harus Diisi",
+            "email" => "Kolom :attribute Harus Berbentuk Inputan Email"
+        ];
+
+        $this->validate($request, [
+            "nama" => "required",
+            "email" => "required|email",
+            "role" => "required"
+        ], $messages);
+
         return DB::transaction(function() use ($request) {
+
+            $cek = User::where("email", $request->email)->count();
+
+            if ($cek > 0) {
+                return back()->with("message_error", "Email Sudah Digunakan")->withInput();
+            }
+
+            if ($request["role"] == "ormawa") {
+                $role = "ormawa123";
+            } else if ($request["role"] == "wadir") {
+                $role = "wadir123";
+            } else if ($request["role"] == "admin") {
+                $role = "admin123";
+            }
+
             User::create([
                 "id" => Uuid::uuid4()->getHex(),
                 "nama" => $request["nama"],
                 "email" => $request["email"],
-                "password" => bcrypt("administrator123"),
+                "password" => bcrypt($role),
                 "created_by" => Auth::user()->id,
                 "role" => $request["role"],
-                "deskripsi" => $request["deskripsi"]
+                "deskripsi" => empty($request["deskripsi"]) ? null : $request["deskripsi"]
             ]);
 
-            return redirect("/super_admin/pengguna");
+            return redirect("/super_admin/pengguna")->with("message", "Data Berhasil di Tambahkan");
         });
     }
 
@@ -53,14 +79,41 @@ class PenggunaController extends Controller
 
     public function update(Request $request, $id)
     {
+        $messages = [
+            "required" => "Kolom :attribute Harus Diisi",
+            "email" => "Kolom :attribute Harus Berbentuk Inputan Email"
+        ];
+
+        $this->validate($request, [
+            "nama" => "required",
+            "email" => "required|email",
+            "role" => "required"
+        ], $messages);
+
         return DB::transaction(function() use ($request, $id) {
+
+            $cek = User::where("email", $request->email)->count();
+
+            if ($cek > 0) {
+                return back()->with("message_error", "Email Sudah Digunakan")->withInput();
+            }
+
+            if ($request["role"] == "ormawa") {
+                $role = "ormawa123";
+            } else if ($request["role"] == "wadir") {
+                $role = "wadir123";
+            } else if ($request["role"] == "admin") {
+                $role = "admin123";
+            }
+
             User::where("id", $id)->update([
                 "nama" => $request->nama,
+                "password" => bcrypt($role),
                 "role" => $request->role,
-                "deskripsi" => $request->deskripsi 
+                "deskripsi" => empty($request["deskripsi"]) ? null : $request["deskripsi"]
             ]);
 
-            return redirect("/super_admin/pengguna");
+            return redirect("/super_admin/pengguna")->with("message", "Data Berhasil di Simpan");
         });
     }
 

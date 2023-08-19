@@ -13,7 +13,8 @@ class LaporanKegiatanController extends Controller
     public function index()
     {
         return DB::transaction(function() {
-            $data["laporan"] = IzinKegiatan::get();
+            $data["laporan"] = IzinKegiatan::where("file_surat_balasan", "!=", NULL)
+                ->get();
 
             return view("wadir.laporan_kegiatan.index", $data);
         });

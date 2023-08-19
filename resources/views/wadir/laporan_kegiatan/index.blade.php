@@ -70,7 +70,7 @@
                                     </td>
                                     <td class="text-center">
                                         <a href="{{ url('/wadir/laporan_kegiatan/show/'.$item["id"]) }}" class="btn btn-info btn-sm">
-                                            <i class="fa fa-search"></i> SELENGKAPNYA
+                                            <i class="fa fa-search"></i> Detail
                                         </a>
                                     </td>
                                 </tr>
