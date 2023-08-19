@@ -56,6 +56,15 @@
                                 <i class="fa fa-download"></i> Download Data
                             </a>
                             @endif
+                        @else
+                        Bulan
+                        <strong>
+                            {{ $c_bulan }}
+                        </strong>
+                        Tahun
+                        <strong>
+                            {{ $tahun }}
+                        </strong>
                         @endif
                     </h3>
                     

@@ -18,15 +18,25 @@ class IzinKegiatanController extends Controller
     public function index()
     {
         return DB::transaction(function () {
+            
+            $bulan = date("M");
+            $carbonBulan = Carbon::createFromFormat('M', $bulan);
+            $bulan = $carbonBulan->format('m');
+            
+            $data["tahun"] = date("Y");
+            
             $data["izin_kegiatan"] = IzinKegiatan::where("user_id", Auth::user()->id)
+            ->whereMonth("created_at", $bulan)
+            ->whereYear("created_at", $data["tahun"])
             ->orderBy("created_at", "DESC")
             ->get();
             
-            $tahunSekarang = date('Y');
             $tahunAwal = IzinKegiatan::orderBy('created_at', 'asc')->value('created_at');
             $tahunAwal = Carbon::parse($tahunAwal)->year;
-            $data["tahun_range"] = range($tahunAwal, $tahunSekarang);
+            $data["tahun_range"] = range($tahunAwal, $data["tahun"]);
             
+            $data["c_bulan"] = Carbon::createFromDate(null, $bulan, null)->translatedFormat('F');
+
             return view("ormawa.izin_kegiatan.index", $data);
         });
     }
@@ -45,7 +55,7 @@ class IzinKegiatanController extends Controller
         return DB::transaction(function() use ($request) {
             $bulan = $request->bulan;
             $tahun = $request->tahun;
-
+            
             $izin_kegiatan = IzinKegiatan::whereMonth("created_at", $request->bulan)
             ->whereYear("created_at", $request->tahun)
             ->where("user_id", Auth::user()->id)
@@ -57,7 +67,9 @@ class IzinKegiatanController extends Controller
             $tahunAwal = Carbon::parse($tahunAwal)->year;
             $tahun_range = range($tahunAwal, $tahunSekarang);
             
-            return back()->with(["izin_kegiatan" => $izin_kegiatan, "tahun_range" => $tahun_range, "tahun" => $tahun, "bulan" => $bulan]);
+            $c_bulan = Carbon::createFromDate(null, $bulan, null)->translatedFormat('F');
+            
+            return back()->with(["izin_kegiatan" => $izin_kegiatan, "tahun_range" => $tahun_range, "tahun" => $tahun, "bulan" => $bulan, "message" => "Data Izin Kegiatan Bulan <strong>" . $c_bulan . "</strong> Tahun " . "<strong>" . $request->tahun ."</strong> Berhasil di Lakukan"]);
         });
     }
     
@@ -292,21 +304,21 @@ class IzinKegiatanController extends Controller
             return response()->download("storage/".$data["file_surat_balasan"]);
         });
     }
-
+    
     public function filter($bulan, $tahun)
     {
         return DB::transaction(function() use ($bulan, $tahun) {
             $izin_kegiatan = IzinKegiatan::whereMonth("created_at", $bulan)
-                ->whereYear("created_at", $tahun)
-                ->where("user_id", Auth::user()->id)
-                ->orderBy("created_at", "ASC")
-                ->get(); 
-
+            ->whereYear("created_at", $tahun)
+            ->where("user_id", Auth::user()->id)
+            ->orderBy("created_at", "ASC")
+            ->get(); 
+            
             $c_bulan = Carbon::createFromDate(null, $bulan, null)->translatedFormat('F');
             $c_tahun = $tahun;
-
+            
             $pdf = PDF::loadView("ormawa.izin_kegiatan.filter", ["izin_kegiatan" => $izin_kegiatan, "bulan" => $c_bulan, "tahun" => $c_tahun])->setPaper("a3");
-
+            
             return $pdf->download("Data_Izin_Kegiatan_Bulan_" . $c_bulan . "_Tahun_" . $c_tahun . ".pdf");
         });
     }
