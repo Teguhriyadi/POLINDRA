@@ -25,6 +25,7 @@
                         <thead>
                             <tr>
                                 <th style="text-align: center;">No.</th>
+                                <th>Nama UKM</th>
                                 <th>Nama Kegiatan</th>
                                 <th style="text-align: center;">File Laporan</th>
                                 <th style="text-align: center;">File Gambar</th>
@@ -36,6 +37,7 @@
                             @foreach ($laporan as $item)
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}.</td>
+                                    <td>{{ $item->users->nama }}</td>
                                     <td>{{ $item["nama_kegiatan"] }}</td>
                                     <td class="text-center">
                                         @if (empty($item["laporan_kegiatan"]["file_lpj"]))

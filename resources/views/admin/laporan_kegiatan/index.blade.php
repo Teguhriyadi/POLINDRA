@@ -25,6 +25,7 @@
                         <thead>
                             <tr>
                                 <th style="text-align: center;">No.</th>
+                                <th>Nama UKM</th>
                                 <th>Nama Kegiatan</th>
                                 <th style="text-align: center;">File Laporan</th>
                                 <th style="text-align: center;">File Gambar</th>
@@ -39,6 +40,7 @@
                                 @else
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}.</td>
+                                    <td>{{ $item->users->nama }}</td>
                                     <td>{{ $item["nama_kegiatan"] }}</td>
                                     <td class="text-center">
                                         @if (empty($item["laporan_kegiatan"]["file_lpj"]))
@@ -64,7 +66,17 @@
                                         <img src="{{ url('storage/'.$item["laporan_kegiatan"]["foto_dokumentasi"]) }}" style="width: 50px; height: 50px">
                                         @endif
                                     </td>
-                                    <td>-</td>
+                                    <td class="text-center">
+                                        @if (empty($item->laporan_kegiatan))
+                                        <button class="btn btn-danger btn-sm">
+                                            Kegiatan Berlangsung
+                                        </button>
+                                        @else
+                                        <button class="btn btn-success btn-sm">
+                                            <i class="fa fa-check"></i> Kegiatan Selesai
+                                        </button>
+                                        @endif
+                                    </td>
                                     <td class="text-center">
                                         <a href="{{ url('/super_admin/laporan_kegiatan/show/'.$item["id"]) }}" class="btn btn-info btn-sm">
                                             <i class="fa fa-search"></i> Detail

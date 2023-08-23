@@ -94,6 +94,14 @@ use Carbon\Carbon;
                                 </div>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-md-3"> Foto Dokumentasi </label>
+                                <div class="col-md-7">
+                                    <img src="{{ url('/storage/'.$detail->laporan_kegiatan->foto_dokumentasi) }}" class="img-responsive" style="width: 100px; height: 100px">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
