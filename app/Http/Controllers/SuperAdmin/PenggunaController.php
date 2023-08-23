@@ -92,12 +92,6 @@ class PenggunaController extends Controller
 
         return DB::transaction(function() use ($request, $id) {
 
-            $cek = User::where("email", $request->email)->count();
-
-            if ($cek > 0) {
-                return back()->with("message_error", "Email Sudah Digunakan")->withInput();
-            }
-
             if ($request["role"] == "ormawa") {
                 $role = "ormawa123";
             } else if ($request["role"] == "wadir") {

@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Data Izin Kegiatan Bulan {{ $bulan }} Tahun {{ $tahun }} </title>
+    <title>Data Laporan Kegiatan Bulan {{ $bulan }} Tahun {{ $tahun }} </title>
     
     <style>
         body {
@@ -34,7 +34,7 @@
     
     <center>
         <div class="heading">
-            Data Izin Kegiatan Bulan {{ $bulan }} Tahun {{ $tahun }}
+            Data Laporan Kegiatan Bulan {{ $bulan }} Tahun {{ $tahun }}
         </div>
     </center>
     
@@ -48,6 +48,7 @@
                 <th style="text-align: left;">Tempat Pelaksanaan</th>
                 <th class="teks-tengah">Mulai</th>
                 <th class="teks-tengah">Akhir</th>
+                <th class="teks-tengah">Dokumentasi</th>
                 <th class="teks-tengah">Status</th>
             </tr>
         </thead>
@@ -55,31 +56,30 @@
             @php
             $nomer = 0;
             @endphp
-            @foreach ($izin_kegiatan as $item)
+            @foreach ($laporan as $item)
             <tr>
                 <td class="teks-tengah">{{ ++$nomer }}.</td>
-                <td>{{ $item["nama_kegiatan"] }}</td>
-                <td>{{ $item["tempat_pelaksanaan"] }}</td>
+                <td>{{ $item["izin"]["nama_kegiatan"] }}</td>
+                <td>{{ $item["izin"]["tempat_pelaksanaan"] }}</td>
                 <td class="teks-tengah">
                     @php
-                    $mulai = Carbon::createFromFormat('Y-m-d H:i:s', $item->mulai);
+                    $mulai = Carbon::createFromFormat('Y-m-d H:i:s', $item->izin->mulai);
                     $format = $mulai->isoFormat('dddd, D MMMM YYYY HH:mm:ss');
                     echo $format;
                     @endphp
                 </td>
                 <td class="teks-tengah">
                     @php
-                    $akhir = Carbon::createFromFormat('Y-m-d H:i:s', $item->akhir);
+                    $akhir = Carbon::createFromFormat('Y-m-d H:i:s', $item->izin->akhir);
                     $format = $akhir->isoFormat('dddd, D MMMM YYYY HH:mm:ss');
                     echo $format;
                     @endphp
                 </td>
                 <td class="teks-tengah">
-                    @if ($item["status"] == "1")
-                        Sudah di Validasi    
-                    @elseif($item["status"] == "0")
-                        Belum di Konfirmasi
-                    @endif
+                    <img style="width: 50; height: 50" src="{{ public_path("storage/".$item->foto_dokumentasi) }}">
+                </td>
+                <td class="teks-tengah">
+                    Kegiatan Selesai
                 </td>
             </tr>
             @endforeach

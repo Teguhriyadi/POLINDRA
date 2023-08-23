@@ -36,4 +36,13 @@ class LaporanKegiatanController extends Controller
             return response()->download("storage/".$laporan_kegiatan->file_lpj);
         });
     }
+
+    public function file($id)
+    {
+        return DB::transaction(function() use ($id) {
+            $kegiatan = IzinKegiatan::where("id", $id)->first();
+            
+            return response()->download("storage/".$kegiatan->file_laporan);
+        });
+    }
 }

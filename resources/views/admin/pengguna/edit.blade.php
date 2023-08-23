@@ -49,7 +49,7 @@
                             <div class="row">
                                 <label for="email" class="control-label col-md-3"> Email </label>
                                 <div class="col-md-7">
-                                    <input type="email" class="form-control" name="email" id="email" placeholder="Masukkan Email" value="{{ old('email') ?? $edit["email"] }} ?? '' " readonly>
+                                    <input type="email" class="form-control" name="email" id="email" placeholder="Masukkan Email" value="{{ old('email') ?? $edit["email"] ?? '' }}" readonly>
                                     @error("email")
                                         <span class="text-danger">
                                             {{ $message }}

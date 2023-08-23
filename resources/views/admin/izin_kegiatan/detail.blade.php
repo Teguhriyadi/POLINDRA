@@ -47,7 +47,7 @@
                             <div class="row">
                                 <label for="file_surat_izin" class="control-label col-md-3"> File Surat Izin </label>
                                 <div class="col-md-7">
-                                    <a target="_blank" href="" class="btn btn-primary btn-sm">
+                                    <a target="_blank" href="{{ url('/super_admin/izin_kegiatan/download/'.$detail->id) }}" class="btn btn-primary btn-sm">
                                         <i class="fa fa-download"></i> UNDUH FILE
                                     </a>
                                 </div>
@@ -107,7 +107,7 @@
                         </div>
                         <div class="form-group @error("file_surat_balasan") {{ 'has-error' }} @enderror">
                             <div class="row">
-                                <label for="file_surat_balasan" class="control-label col-md-3"> Unggah Surat Balasan </label>
+                                <label for="file_surat_balasan" class="control-label col-md-3"> File Surat Balasan </label>
                                 <div class="col-md-7">
                                     @if (!empty($detail->file_surat_balasan))
                                     <a target="_blank" href="{{ url('/super_admin/izin_kegiatan/balasan/'.$detail->id) }}" class="btn btn-primary btn-sm">

@@ -19,4 +19,9 @@ class LaporanKegiatan extends Model
     protected $keyType = "string";
 
     public $primaryKey = "id";
+
+    public function izin()
+    {
+        return $this->hasOne("App\Models\IzinKegiatan", "id", "izin_kegiatan_id");
+    }
 }

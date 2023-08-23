@@ -57,6 +57,7 @@ Route::group(["middleware" => ["is_autentikasi"]], function() {
             Route::get("/", [SuperAdminLaporanKegiatanController::class, "index"]);
             Route::get("/show/{id}", [SuperAdminLaporanKegiatanController::class, "show"]);
             Route::get("/lpj/{id}", [SuperAdminLaporanKegiatanController::class, "lpj"]);
+            Route::get("/izin/{id}/file", [SuperAdminLaporanKegiatanController::class, "file"]);
         });
 
         Route::prefix("pengguna")->group(function() {
@@ -96,6 +97,7 @@ Route::group(["middleware" => ["is_autentikasi"]], function() {
             Route::get("/", [WadirLaporanKegiatanController::class, "index"]);
             Route::get("/show/{id}", [WadirLaporanKegiatanController::class, "show"]);
             Route::get("/lpj/{id}", [WadirLaporanKegiatanController::class, "lpj"]);
+            Route::get("/izin/{id}/file", [WadirLaporanKegiatanController::class, "izin"]);
         });
 
         Route::prefix("profil_saya")->group(function() {
@@ -130,6 +132,7 @@ Route::group(["middleware" => ["is_autentikasi"]], function() {
 
         Route::prefix("laporan_kegiatan")->group(function() {
             Route::get("/", [LaporanKegiatanController::class, "index"]);
+            Route::post("/", [LaporanKegiatanController::class, "post"]);
             Route::get("/unggah/{id}", [LaporanKegiatanController::class, "create"]);
             Route::get("/show/{id}", [LaporanKegiatanController::class, "show"]);
             Route::put("/update/{id}", [LaporanKegiatanController::class, "update"]);
@@ -137,6 +140,8 @@ Route::group(["middleware" => ["is_autentikasi"]], function() {
             Route::get("/lpj/{id}", [LaporanKegiatanController::class, "lpj"]);
             Route::post("/simpan/{id}", [LaporanKegiatanController::class, "store"]);
             Route::get("/balasan/{id}", [LaporanKegiatanController::class, "balasan"]);
+            Route::get("/izin/{id}/file", [LaporanKegiatanController::class, "izin"]);
+            Route::get("/{bulan}/{tahun}", [LaporanKegiatanController::class, "filter"]);
         });
 
         Route::prefix("profil_saya")->group(function() {

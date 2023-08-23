@@ -21,7 +21,7 @@ use Carbon\Carbon;
             <div class="panel panel-headline">
                 <div class="panel-heading">
                     <h3 class="panel-title">
-                        Unggah Laporan Kegiatan
+                        Detail Laporan Kegiatan
                     </h3>
                 </div>
                 <form action="{{ url('/ormawa/laporan_kegiatan/update/'.$detail["id"]) }}" method="POST" enctype="multipart/form-data">
@@ -66,7 +66,7 @@ use Carbon\Carbon;
                             <div class="row">
                                 <label for="unggah_file" class="control-label col-md-3"> File Izin Kegiatan </label>
                                 <div class="col-md-7">
-                                    <a href="" class="btn btn-primary btn-sm">
+                                    <a target="_blank" href="{{ url('/ormawa/laporan_kegiatan/izin/'.$detail["id"].'/file') }}" class="btn btn-primary btn-sm">
                                         <i class="fa fa-download"></i> UNDUH FILE
                                     </a>
                                 </div>

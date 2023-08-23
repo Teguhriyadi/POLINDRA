@@ -34,6 +34,9 @@
                         </thead>
                         <tbody>
                             @foreach ($laporan as $item)
+                                @if (empty($item->file_surat_balasan))
+                                
+                                @else
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}.</td>
                                     <td>{{ $item["nama_kegiatan"] }}</td>
@@ -68,6 +71,7 @@
                                         </a>
                                     </td>
                                 </tr>
+                                @endif
                             @endforeach
                         </tbody>
                     </table>
