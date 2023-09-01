@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reset_password', function (Blueprint $table) {
+        Schema::create('token_password', function (Blueprint $table) {
             $table->string("id", 50)->primary();
             $table->string("user_id", 50);
             $table->string("token", 150);

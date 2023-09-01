@@ -9,7 +9,7 @@ class ResetPassword extends Model
 {
     use HasFactory;
 
-    protected $table = "reset_password";
+    protected $table = "token_password";
 
     protected $guarded = [''];
 

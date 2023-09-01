@@ -33,7 +33,8 @@ class AppController extends Controller
             "laporan" => LaporanKegiatan::count()
         ];
 
-        $kegiatan = IzinKegiatan::get();
+        $kegiatan = IzinKegiatan::where("status", "1")->get();
+        $non = IzinKegiatan::where("status", "0")->get();
 
         $dataperbulan = [];
 
@@ -46,7 +47,7 @@ class AppController extends Controller
             $dataperbulan[$bulan]++;
         }
 
-        return view("wadir.dashboard", $data, compact("kegiatan", "dataperbulan"));
+        return view("wadir.dashboard", $data, compact("kegiatan", "dataperbulan", "non"));
     }
 
     public function dashboard_ormawa()
