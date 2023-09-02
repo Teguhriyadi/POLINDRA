@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
 use Termwind\Components\Raw;
 use PDF;
@@ -84,7 +85,7 @@ class LaporanKegiatanController extends Controller
         
         $this->validate($request, [
             "file_lpj" => "required|mimetypes:application/pdf|max:10000",
-            "foto_dokumentasi" => "required|image|mimes:png,jpg,jpeg|max:204"
+            "foto_dokumentasi" => "required|image|mimes:png,jpg,jpeg|max:2048"
         ], $messages);
         
         return DB::transaction(function() use ($request, $id) {
@@ -104,6 +105,15 @@ class LaporanKegiatanController extends Controller
         });
     }
     
+    public function edit($id)
+    {
+        return DB::transaction(function() use ($id) {
+            $data["detail"] = IzinKegiatan::where("id", $id)->first();
+
+            return view("ormawa.laporan_kegiatan.edit", $data); 
+        });
+    }
+
     public function show($id)
     {
         return DB::transaction(function() use ($id) {
@@ -146,6 +156,52 @@ class LaporanKegiatanController extends Controller
         });
     }
     
+    public function ubah(Request $request, $id)
+    {
+        $pesan = [
+            "required" => "Kolom :attribute Harus Diisi",
+            "mimetypes" => "Kolom :attribute Harus Berupa PDF",
+            "max" => "Kolom :attribute Maximal Harus :max",
+            "image" => "Kolom :attribute Harus Gambar",
+            "mimes" => "Kolom :attribute Harus PNG, JPG, JPEG",
+        ];
+        
+        $this->validate($request, [
+            "file_lpj" => "required|mimetypes:application/pdf|max:10000",
+            "foto_dokumentasi" => "required|image|mimes:png,jpg,jpeg|max:2048"
+        ], $pesan);
+
+        return DB::transaction(function() use ($request, $id) {
+
+            $izin = IzinKegiatan::where("id", $id)->first();
+
+            if ($request->file("file_lpj")) {
+                if ($izin->file_lpj != NULL) {
+                    Storage::delete($izin->file_lpj);
+                }
+                $file_lpj = $request->file("file_lpj")->store("file_lpj");
+            } else {
+                $file_lpj = $izin->file_lpj;
+            }
+
+            if ($request->file("foto_dokumentasi")) {
+                if ($izin->foto_dokumentasi != NULL) {
+                    Storage::delete($izin->foto_dokumentasi);
+                }
+                $foto_dokumentasi = $request->file("foto_dokumentasi")->store("foto_dokumentasi");
+            } else {
+                $foto_dokumentasi = $izin->foto_dokumentasi;
+            }
+
+            LaporanKegiatan::where("izin_kegiatan_id", $izin->id)->update([
+                "file_lpj" => $file_lpj,
+                "foto_dokumentasi" => $foto_dokumentasi
+            ]);
+
+            return redirect("/ormawa/laporan_kegiatan")->with("message", "Data Berhasil di Simpan");
+        });
+    }
+
     public function laporan($id_laporan)
     {
         return DB::transaction(function() use ($id_laporan) {

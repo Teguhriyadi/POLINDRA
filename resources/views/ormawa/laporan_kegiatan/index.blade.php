@@ -164,6 +164,11 @@
                                     <a href="{{ url('/ormawa/laporan_kegiatan/show/'.$item["id"]) }}" class="btn btn-info btn-sm">
                                         <i class="fa fa-search"></i> Detail
                                     </a>
+                                    @if (!empty($item->laporan_kegiatan))
+                                    <a href="{{ url('/ormawa/laporan_kegiatan/edit/'.$item["id"]) }}" class="btn btn-warning btn-sm">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

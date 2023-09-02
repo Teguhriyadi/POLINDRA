@@ -135,7 +135,9 @@ Route::group(["middleware" => ["is_autentikasi"]], function() {
             Route::post("/", [LaporanKegiatanController::class, "post"]);
             Route::get("/unggah/{id}", [LaporanKegiatanController::class, "create"]);
             Route::get("/show/{id}", [LaporanKegiatanController::class, "show"]);
+            Route::get("/edit/{id}", [LaporanKegiatanController::class, "edit"]);
             Route::put("/update/{id}", [LaporanKegiatanController::class, "update"]);
+            Route::put("/ubah/{id}", [LaporanKegiatanController::class, "ubah"]);
             Route::get("/laporan/{id}", [LaporanKegiatanController::class, "laporan"]);
             Route::get("/lpj/{id}", [LaporanKegiatanController::class, "lpj"]);
             Route::post("/simpan/{id}", [LaporanKegiatanController::class, "store"]);
