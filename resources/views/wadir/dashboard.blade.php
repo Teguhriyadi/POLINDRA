@@ -113,8 +113,8 @@ use Carbon\Carbon;
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}.</td>
                                     <td class="{{ $color }}">{{ $item["users"]["nama"] }}</td>
-                                    <td>{{ $item->nama_kegiatan }}</td>
-                                    <td class="text-center">
+                                    <td class="{{ $color }}">{{ $item->nama_kegiatan }}</td>
+                                    <td class="{{ $color }} text-center">
                                         @php
                                         $mulai = Carbon::createFromFormat('Y-m-d H:i:s', $item->created_at);
                                         $format = $mulai->isoFormat('dddd, D MMMM YYYY HH:mm:ss');
@@ -130,6 +130,12 @@ use Carbon\Carbon;
                                 @endforeach
                             </tbody>
                         </table>
+
+                        <strong>
+                            Notes:
+                        </strong>
+                        <li>Warna Merah menunjukkan bahwa data pengajuan telah lebih dari 3 hari.</li>
+                        <li>Warna hitam menunjukkan bahwa data pengajuan kurang dari 3 hari.</li>
                     </div>
                 </div>
             </div>
