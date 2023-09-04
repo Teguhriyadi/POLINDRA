@@ -102,9 +102,17 @@ use Carbon\Carbon;
                             </thead>
                             <tbody>
                                 @foreach ($non as $item)
+                                @php
+                                $uploadIzinKegiatan = $item->created_at;
+                                $sekarang = now();
+                                
+                                $differenceInDays = $uploadIzinKegiatan->diffInDays($sekarang);
+
+                                $color = $differenceInDays > 3 ? 'text-danger' : '';
+                                @endphp
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}.</td>
-                                    <td class="text-danger">{{ $item["users"]["nama"] }}</td>
+                                    <td class="{{ $color }}">{{ $item["users"]["nama"] }}</td>
                                     <td>{{ $item->nama_kegiatan }}</td>
                                     <td class="text-center">
                                         @php

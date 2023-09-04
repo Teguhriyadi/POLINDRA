@@ -29,4 +29,6 @@ class IzinKegiatan extends Model
     {
         return $this->hasOne("App\Models\LaporanKegiatan", "izin_kegiatan_id", "id");
     }
+
+    protected $dates = ['created_at'];
 }
